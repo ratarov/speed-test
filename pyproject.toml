@@ -8,7 +8,7 @@ dependencies = [
 ]
 
 [project.scripts]
-speed-test = "speed_test:main"
+speed-test = "speed_test.cli:main"
 
 [build-system]
 requires = ["hatchling"]
