@@ -43,7 +43,6 @@ def describe_network_error(error: httpx.RequestError, url: str, timeout: float) 
     """Переводит сетевую ошибку httpx в объяснение, по которому понятно, что чинить."""
     host = httpx.URL(url).host or url
     if isinstance(error, httpx.UnsupportedProtocol):
-        # Сам адрес проверен при разборе аргументов, так что сюда приводит только перенаправление.
         return f'{host} перенаправляет на адрес с неподдерживаемой схемой.'
     if isinstance(error, httpx.TooManyRedirects):
         return f'{host} перенаправляет запрос по кругу — проверьте адрес.'

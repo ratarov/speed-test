@@ -1,5 +1,3 @@
-# Хуки локальные и запускаются через uv: версии инструментов берутся из dev-группы и uv.lock,
-# а не задаются второй раз внутри pre-commit — иначе они разъедутся с тем, что стоит в проекте.
 repos:
   - repo: local
     hooks:
@@ -22,7 +20,6 @@ repos:
         entry: uv run mypy
         language: system
         types: [python]
-        # Список файлов не передаём: что проверять, решает files в pyproject.toml.
         pass_filenames: false
 
       - id: pytest

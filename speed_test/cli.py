@@ -142,7 +142,6 @@ def fail(message: str, style: Style, *, code: int = FAILURE_EXIT_CODE) -> int:
 def main(argv: list[str] | None = None) -> int:
     """Точка входа: 0 — замер состоялся, 1 — ошибка замера, 2 — ошибка в параметрах."""
     raw_args = sys.argv[1:] if argv is None else argv
-    # Параметры ещё не разобраны, а ошибку показывать уже нужно: флаг читаем из строки как есть.
     err_style = Style.detect(sys.stderr, disabled='--no-color' in raw_args)
 
     try:
