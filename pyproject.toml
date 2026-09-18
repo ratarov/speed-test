@@ -16,8 +16,29 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "mypy>=2.3.1",
     "pytest>=9.1.1",
+    "ruff>=0.16.8",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "D", "ANN", "UP", "SIM", "I"]
+# D203/D213 конфликтуют с D211/D212 — выбираем по одному правилу из пары, иначе ruff предупреждает.
+ignore = ["D203", "D213"]
+
+[tool.ruff.lint.per-file-ignores]
+# В тестах имя теста и есть описание, а типы аргументов задают фикстуры.
+"tests/*" = ["D", "ANN"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.mypy]
+files = ["speed_test"]
+strict = true
