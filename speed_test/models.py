@@ -46,7 +46,8 @@ class Summary:
 
 def summarize(attempts: list[Attempt]) -> Summary:
     """Считает агрегаты по списку выполненных запросов."""
-    speeds = [attempt.speed for attempt in attempts]
+    # Пустой список сюда не приходит — запросов минимум один, — но ронять отчёт на нём незачем.
+    speeds = [attempt.speed for attempt in attempts] or [0.0]
     return Summary(
         attempts=len(attempts),
         total_size=sum(attempt.size for attempt in attempts),
