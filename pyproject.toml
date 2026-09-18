@@ -1,0 +1,15 @@
+[project]
+name = "speed-test"
+version = "0.1.0"
+description = "Замерялка скорости скачивания по HTTP"
+requires-python = ">=3.13"
+dependencies = [
+    "httpx>=0.28.1",
+]
+
+[project.scripts]
+speed-test = "speed_test:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
