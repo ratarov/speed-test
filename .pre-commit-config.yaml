@@ -1,0 +1,33 @@
+# Хуки локальные и запускаются через uv: версии инструментов берутся из dev-группы и uv.lock,
+# а не задаются второй раз внутри pre-commit — иначе они разъедутся с тем, что стоит в проекте.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --fix
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+
+      - id: mypy
+        name: mypy
+        entry: uv run mypy
+        language: system
+        types: [python]
+        # Список файлов не передаём: что проверять, решает files в pyproject.toml.
+        pass_filenames: false
+
+      - id: pytest
+        name: pytest
+        entry: uv run pytest -q
+        language: system
+        types: [python]
+        pass_filenames: false
