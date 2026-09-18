@@ -6,14 +6,59 @@
 
 ## Что нужно поставить
 
-**uv** — он сам поднимет Python и зависимости. Установка в PowerShell:
+**uv** — он сам поднимет Python и зависимости:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Либо привычным менеджером пакетов: `brew install uv` на macOS, `pipx install uv` где угодно,
+в дистрибутивах Linux — свой пакет `uv`.
+
+Больше ничего ставить не нужно. Проекту нужен Python 3.13, и если в системе его нет — пусть стоит
+только 3.12, — `uv run` при первом запуске скачает свою сборку (около 20 МБ) и положит её отдельно,
+системный Python не трогая. Зависимости он тоже поставит сам, по `pyproject.toml` и `uv.lock`.
+
+Команда `uv python install 3.13` нужна лишь в двух случаях: автозагрузка отключена
+(`UV_PYTHON_DOWNLOADS=never` или `python-downloads = "manual"` в конфиге uv) или машина без
+интернета и Python готовится заранее.
+
+<details>
+<summary>Установка на Windows</summary>
 
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-Python 3.13 отдельно ставить не обязательно: если его нет, выполните `uv python install 3.13`.
-Зависимости тоже ставить не нужно — `uv run` сам создаст окружение по `pyproject.toml` и `uv.lock`.
+Дальше всё одинаково: команды из README работают в PowerShell как есть, разница только в путях
+внутри окружения — `.venv\Scripts\` вместо `.venv/bin/`.
+
+</details>
+
+<details>
+<summary>Установка без uv, обычным Python</summary>
+
+Нужен Python 3.13 или новее (`python3 --version`). Создайте окружение и поставьте проект:
+
+```bash
+python3.13 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -e .
+```
+
+Инструменты разработки ставятся отдельно — `pip` не читает dev-группу из `pyproject.toml`:
+
+```bash
+pip install pytest ruff mypy pre-commit
+pytest
+ruff check .
+mypy
+```
+
+Разница с uv одна, но существенная: `uv.lock` при таком способе не используется, и версии
+зависимостей подберёт pip — они могут отличаться от зафиксированных.
+
+</details>
 
 ## Запуск
 
@@ -22,6 +67,21 @@ Python 3.13 отдельно ставить не обязательно: есл�
 ```bash
 uv run speed-test
 ```
+
+<details>
+<summary>Запуск без uv</summary>
+
+Проект, поставленный обычным pip, даёт ту же команду без префикса — и то же самое пакетом:
+
+```bash
+speed-test
+speed-test https://example.com/big-image.jpg -n 5
+python -m speed_test
+```
+
+Дальше в README команды показаны с `uv run`; без uv просто отбрасывайте этот префикс.
+
+</details>
 
 Без аргументов берётся тестовый файл на 10 МБ: `https://speed.cloudflare.com/__down?bytes=10000000`.
 Свой адрес — первым аргументом:
@@ -51,7 +111,7 @@ uv run speed-test https://example.com/big-image.jpg
 
 ```
 Адрес:    https://speed.cloudflare.com/__down?bytes=10000000
-Запросов: 3, таймаут: 30 с
+Запросов: 3, таймаут: 10 с
 
  1/3: 9.54 МБ за 0.30 с — 31.47 МБ/с
  2/3: 9.54 МБ за 0.20 с — 47.59 МБ/с
